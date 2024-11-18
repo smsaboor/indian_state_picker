@@ -1,16 +1,16 @@
-import 'package:indian_state_picker/indian_state.dart';
-import 'package:indian_state_picker/indianStates.dart';
-import 'package:indian_state_picker/utils/typedefs.dart';
-import 'package:flutter/material.dart';
-import 'utils/utils.dart';
 
-///Provides a customizable [DropdownButton] for all indianStates
-class IndianStatePickerDropdown extends StatefulWidget {
-  const IndianStatePickerDropdown({super.key,
+import 'package:flutter/material.dart';
+
+
+class StatePickerDropdown<T> extends StatefulWidget {
+  const StatePickerDropdown({
+    super.key,
     required this.onValuePicked,
     this.itemFilter,
     this.sortComparator,
-    this.priorityList,
+    this.states,
+    this.topStates,
+    this.isEqual,
     this.itemBuilder,
     this.initialValue,
     this.isExpanded = false,
@@ -29,125 +29,121 @@ class IndianStatePickerDropdown extends StatefulWidget {
     this.isFirstDefaultIfInitialValueNotProvided = true,
   });
 
-  /// Filters the available indianState list
-  final ItemFilter? itemFilter;
+  /// Filters the available list of items
+  final bool Function(T item)? itemFilter;
 
-  /// [Comparator] to be used in sort of indianState list
-  final Comparator<IndianState>? sortComparator;
+  /// [Comparator] to be used in sorting the list of items
+  final Comparator<T>? sortComparator;
 
-  /// List of indianStates that are placed on top
-  final List<IndianState>? priorityList;
+  /// List of items that are placed on top
+  final List<T>? topStates;
 
-  ///This function will be called to build the child of DropdownMenuItem
-  ///If it is not provided, default one will be used which displays
-  ///flag image, isoCode and phoneCode in a row.
-  ///Check _buildDefaultMenuItem method for details.
-  final ItemBuilder? itemBuilder;
+  /// Custom equality function to compare two items
+  final bool Function(T state, T topState)? isEqual;
 
-  ///It should be one of the ISO ALPHA-2 Code that is provided
-  ///in indianStateList map of indianStates.dart file.
-  final String? initialValue;
 
-  ///This function will be called whenever a indianState item is selected.
-  final ValueChanged<IndianState> onValuePicked;
+  final List<T>? states;
 
-  /// Boolean property to enabled/disable expanded property of DropdownButton
+  /// Function to build the child of `DropdownMenuItem`
+  final Widget Function(T item)? itemBuilder;
+
+  /// Initial value selected in the dropdown
+  final T? initialValue;
+
+  /// This function is called whenever an item is selected
+  final ValueChanged<T> onValuePicked;
+
+  /// Boolean property to enable/disable expanded property of `DropdownButton`
   final bool isExpanded;
 
-  /// See [itemHeight] of [DropdownButton]
+  /// See [itemHeight] of `DropdownButton`
   final double? itemHeight;
 
-  /// See [isDense] of [DropdownButton]
+  /// See [isDense] of `DropdownButton`
   final bool isDense;
 
-  /// See [underline] of [DropdownButton]
+  /// See [underline] of `DropdownButton`
   final Widget? underline;
 
-  /// Selected indianState widget builder to display. See [selectedItemBuilder] of [DropdownButton]
-  final ItemBuilder? selectedItemBuilder;
+  /// Selected item widget builder to display
+  final Widget Function(T item)? selectedItemBuilder;
 
-  /// See [dropdownColor] of [DropdownButton]
+  /// See [dropdownColor] of `DropdownButton`
   final Color? dropdownColor;
 
-  /// See [onTap] of [DropdownButton]
+  /// See [onTap] of `DropdownButton`
   final VoidCallback? onTap;
 
-  /// See [icon] of [DropdownButton]
+  /// See [icon] of `DropdownButton`
   final Widget? icon;
 
-  /// See [iconDisabledColor] of [DropdownButton]
+  /// See [iconDisabledColor] of `DropdownButton`
   final Color? iconDisabledColor;
 
-  /// See [iconEnabledColor] of [DropdownButton]
+  /// See [iconEnabledColor] of `DropdownButton`
   final Color? iconEnabledColor;
 
-  /// See [iconSize] of [DropdownButton]
+  /// See [iconSize] of `DropdownButton`
   final double iconSize;
 
-  /// See [hint] of [DropdownButton]
+  /// See [hint] of `DropdownButton`
   final Widget? hint;
 
-  /// See [disabledHint] of [DropdownButton]
+  /// See [disabledHint] of `DropdownButton`
   final Widget? disabledHint;
 
-  /// Set first item in the indianState list as selected initially
-  /// if initialValue is not provided
+  /// Set the first item in the list as selected initially if initialValue is not provided
   final bool isFirstDefaultIfInitialValueNotProvided;
 
   @override
-  State<IndianStatePickerDropdown> createState() => _IndianStatePickerDropdownState();
+  State<StatePickerDropdown<T>> createState() => _StatePickerDropdownState<T>();
 }
 
-class _IndianStatePickerDropdownState extends State<IndianStatePickerDropdown> {
-  late List<IndianState> _indianStates;
-  late IndianState _selectedIndianState;
+class _StatePickerDropdownState<T> extends State<StatePickerDropdown<T>> {
+  late List<T> _states;
+  late T _selectedItem;
 
   @override
   void initState() {
-    _indianStates =
-        indianStateList.where(widget.itemFilter ?? acceptAllIndianStates).toList();
-
-    if (widget.sortComparator != null) {
-      _indianStates.sort(widget.sortComparator);
-    }
-
-    if (widget.priorityList != null) {
-      for (var indianState in widget.priorityList!) {
-        _indianStates.removeWhere((IndianState c) => indianState.code == c.code);
-      }
-      _indianStates.insertAll(0, widget.priorityList!);
-    }
-
-    if (widget.initialValue != null) {
-      try {
-        _selectedIndianState = _indianStates.firstWhere(
-          (indianState) => indianState.code == widget.initialValue!.toUpperCase(),
-        );
-      } catch (error) {
-        throw Exception(
-            "The initialValue provided is not a supported iso code!");
-      }
-    } else {
-      if (widget.isFirstDefaultIfInitialValueNotProvided &&
-          _indianStates.isNotEmpty) {
-        _selectedIndianState = _indianStates[0];
-      }
-    }
-
     super.initState();
+    // Filter items
+    _states = (widget.states ?? []).toList();
+    if (widget.itemFilter != null) {
+      _states = _states.where(widget.itemFilter!).toList();
+    }
+
+    // Sort items
+    if (widget.sortComparator != null) {
+      _states.sort(widget.sortComparator!);
+    }
+
+    if (widget.topStates != null) {
+      for (var topState in widget.topStates!) {
+        _states.removeWhere((T state) => widget.isEqual!(state, topState));
+      }
+      _states.insertAll(0, widget.topStates!);
+    }
+
+    // Set initial value
+    if (widget.initialValue != null) {
+      _selectedItem = widget.initialValue!;
+    } else if (widget.isFirstDefaultIfInitialValueNotProvided && _states.isNotEmpty) {
+      _selectedItem = _states.first;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    List<DropdownMenuItem<IndianState>> items = _indianStates
-        .map((indianState) => DropdownMenuItem<IndianState>(
-            value: indianState,
-            child: widget.itemBuilder != null
-                ? widget.itemBuilder!(indianState)
-                : _buildDefaultMenuItem(indianState)))
+    final items = _states
+        .map((item) => DropdownMenuItem<T>(
+      value: item,
+      child: widget.itemBuilder != null
+          ? widget.itemBuilder!(item)
+          : Text(item.toString()),
+    ))
         .toList();
 
-    return DropdownButton<IndianState>(
+    return DropdownButton<T>(
       hint: widget.hint,
       disabledHint: widget.disabledHint,
       onTap: widget.onTap,
@@ -159,36 +155,20 @@ class _IndianStatePickerDropdownState extends State<IndianStatePickerDropdown> {
       underline: widget.underline ?? const SizedBox(),
       isDense: widget.isDense,
       isExpanded: widget.isExpanded,
+      value: _selectedItem,
+      itemHeight: widget.itemHeight,
+      items: items,
       onChanged: (value) {
         if (value != null) {
           setState(() {
-            _selectedIndianState = value;
+            _selectedItem = value;
             widget.onValuePicked(value);
           });
         }
       },
-      items: items,
-      value: _selectedIndianState,
-      itemHeight: widget.itemHeight,
       selectedItemBuilder: widget.selectedItemBuilder != null
-          ? (context) {
-              return _indianStates
-                  .map((c) => widget.selectedItemBuilder!(c))
-                  .toList();
-            }
+          ? (context) => _states.map((item) => widget.selectedItemBuilder!(item)).toList()
           : null,
-    );
-  }
-
-  Widget _buildDefaultMenuItem(IndianState indianState) {
-    return Row(
-      children: <Widget>[
-        IndianStatePickerUtils.getStateImage(indianState, 50, 50),
-        const SizedBox(
-          width: 8.0,
-        ),
-        Text("(${indianState.code}) +${indianState.population}"),
-      ],
     );
   }
 }

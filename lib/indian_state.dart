@@ -3,11 +3,13 @@ class IndianState {
   final String code;
   final String capital;
   final String population;
+  final String image;
   final List<City> cities;
 
   IndianState({
     required this.code,
     required this.capital,
+    required this.image,
     required this.population,
     required this.name,
     required this.cities,
@@ -17,6 +19,7 @@ class IndianState {
     return IndianState(
       name: map['name'] as String,
       code: map['code'] as String,
+      image: map['image'] as String,
       capital: map['capital'] as String,
       population: map['population'] as String,
       cities: (map['cities'] as List)
@@ -31,6 +34,7 @@ class IndianState {
       'code': code,
       'capital': capital,
       'population': population,
+      'image': image,
       'cities': cities.map((city) => city.toMap()).toList(),
     };
   }
