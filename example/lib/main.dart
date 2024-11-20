@@ -29,7 +29,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
-  StatePickerHelper<IndianState> helper = StatePickerHelper<IndianState>(
+  StatePickerUtils<IndianState> statePickerUtils = StatePickerUtils<IndianState>(
     states: indianStateList,
     getCode: (state) => state.code,
     getName: (state) => state.name,
@@ -50,19 +50,19 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('IndianState Pickers Demo'),
+          title: const Text('Indian State Pickers Demo'),
           bottom: TabBar(
             controller: _tabController,
             tabs: const [
               Tab(text: 'Dropdown'),
               Tab(text: 'Dialog'),
-              Tab(text: 'Custom'),
+              Tab(text: 'Custom Dropdown'),
             ],
           ),
         ),
         body: TabBarView(controller: _tabController, children: [
-          StateDropDown(helper: helper),
-          StateDialog(helper: helper),
+          StateDropDown(helper: statePickerUtils),
+          StateDialog(helper: statePickerUtils),
           const CustomStatePicker()
         ]));
   }

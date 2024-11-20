@@ -1,6 +1,19 @@
 import 'package:indian_state_picker/indian_state.dart';
-
+/// A predefined list of Indian states with their details.
+///
+/// This list contains instances of [IndianState] representing Indian states.
+/// Each state includes information such as its code, name, population,
+/// capital, and an image. The list can be used to display Indian states
+/// in pickers, dropdowns, or similar UI components.
 final List<IndianState> indianStateList = [
+  /// Represents the state of Andhra Pradesh.
+  ///
+  /// - `code`: The two-letter code for the state, "AP".
+  /// - `population`: Population of the state as a string, "52221000".
+  /// - `name`: The name of the state, "Andhra Pradesh".
+  /// - `capital`: The capital city, "Amaravati".
+  /// - `image`: Path to the image representing the state.
+  /// - `cities`: An empty list of cities, as this example does not include cities.
   IndianState(
       code: "AP",
       population: "52221000",

@@ -1,8 +1,15 @@
-
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
-
+/// A custom dropdown widget for selecting states with advanced filtering, sorting,
+/// and customization options.
+///
+/// [StatePickerDropdown] allows you to provide custom filters, sort logic, and
+/// item builders, enabling extensive customization for dropdown-based state selection.
+///
+/// [T] represents the type of the dropdown items.
 class StatePickerDropdown<T> extends StatefulWidget {
+  /// Creates a `StatePickerDropdown` with the provided configuration.
   const StatePickerDropdown({
     super.key,
     required this.onValuePicked,
@@ -10,6 +17,7 @@ class StatePickerDropdown<T> extends StatefulWidget {
     this.sortComparator,
     this.states,
     this.topStates,
+    this.mainHeight,
     this.isEqual,
     this.itemBuilder,
     this.initialValue,
@@ -29,70 +37,82 @@ class StatePickerDropdown<T> extends StatefulWidget {
     this.isFirstDefaultIfInitialValueNotProvided = true,
   });
 
-  /// Filters the available list of items
+  /// Filters the available list of items to only include those that match certain criteria.
+  /// Example: Filtering states that start with a specific letter.
   final bool Function(T item)? itemFilter;
 
-  /// [Comparator] to be used in sorting the list of items
+  /// A comparator used to sort the list of items. The comparison logic is customizable.
+  /// Example: Sorting states alphabetically.
   final Comparator<T>? sortComparator;
 
-  /// List of items that are placed on top
+  /// A list of items to be displayed at the top of the dropdown.
+  /// These items are prioritized over the rest of the list.
   final List<T>? topStates;
 
-  /// Custom equality function to compare two items
+  /// A custom equality function used to compare two items.
+  /// This is especially useful for identifying duplicates in lists.
   final bool Function(T state, T topState)? isEqual;
 
-
+  /// The full list of available states/items to be displayed in the dropdown.
   final List<T>? states;
 
-  /// Function to build the child of `DropdownMenuItem`
+  /// A custom widget builder for rendering each item in the dropdown.
+  /// Example: Building a `ListTile` or a `Card` for each item.
   final Widget Function(T item)? itemBuilder;
 
-  /// Initial value selected in the dropdown
+  /// The initial value selected in the dropdown.
+  /// If no initial value is provided, the first item in the list is selected by default.
   final T? initialValue;
 
-  /// This function is called whenever an item is selected
+  /// A callback triggered whenever an item is selected from the dropdown.
+  /// The selected item is passed to the callback function.
   final ValueChanged<T> onValuePicked;
 
-  /// Boolean property to enable/disable expanded property of `DropdownButton`
+  /// A boolean indicating whether the dropdown expands to fill available space.
   final bool isExpanded;
 
-  /// See [itemHeight] of `DropdownButton`
+  /// The height of each dropdown item. Defaults to [kMinInteractiveDimension].
   final double? itemHeight;
 
-  /// See [isDense] of `DropdownButton`
+  /// The height of each dropdown item. Defaults to [kMinInteractiveDimension].
+  final double? mainHeight;
+
+
+  /// Indicates whether the dropdown should use a compact layout.
   final bool isDense;
 
-  /// See [underline] of `DropdownButton`
+  /// The widget displayed under the dropdown. Defaults to an empty widget.
   final Widget? underline;
 
-  /// Selected item widget builder to display
+  /// A custom builder for rendering the selected item.
   final Widget Function(T item)? selectedItemBuilder;
 
-  /// See [dropdownColor] of `DropdownButton`
+  /// The background color of the dropdown.
   final Color? dropdownColor;
 
-  /// See [onTap] of `DropdownButton`
+  /// A callback triggered when the dropdown is tapped.
   final VoidCallback? onTap;
 
-  /// See [icon] of `DropdownButton`
+  /// The icon displayed to indicate dropdown functionality.
   final Widget? icon;
 
-  /// See [iconDisabledColor] of `DropdownButton`
+  /// The color of the icon when the dropdown is disabled.
   final Color? iconDisabledColor;
 
-  /// See [iconEnabledColor] of `DropdownButton`
+  /// The color of the icon when the dropdown is enabled.
   final Color? iconEnabledColor;
 
-  /// See [iconSize] of `DropdownButton`
+  /// The size of the dropdown icon. Defaults to 24.0.
   final double iconSize;
 
-  /// See [hint] of `DropdownButton`
+  /// A placeholder widget displayed when no item is selected.
   final Widget? hint;
 
-  /// See [disabledHint] of `DropdownButton`
+  /// A widget displayed when the dropdown is disabled.
   final Widget? disabledHint;
 
-  /// Set the first item in the list as selected initially if initialValue is not provided
+  /// If `true`, the first item in the list is selected by default
+  /// when no initial value is provided.
   final bool isFirstDefaultIfInitialValueNotProvided;
 
   @override
@@ -106,17 +126,18 @@ class _StatePickerDropdownState<T> extends State<StatePickerDropdown<T>> {
   @override
   void initState() {
     super.initState();
-    // Filter items
+    // Filter items based on the provided filter function.
     _states = (widget.states ?? []).toList();
     if (widget.itemFilter != null) {
       _states = _states.where(widget.itemFilter!).toList();
     }
 
-    // Sort items
+    // Sort items using the provided comparator.
     if (widget.sortComparator != null) {
       _states.sort(widget.sortComparator!);
     }
 
+    // Add top priority items to the beginning of the list.
     if (widget.topStates != null) {
       for (var topState in widget.topStates!) {
         _states.removeWhere((T state) => widget.isEqual!(state, topState));
@@ -124,14 +145,13 @@ class _StatePickerDropdownState<T> extends State<StatePickerDropdown<T>> {
       _states.insertAll(0, widget.topStates!);
     }
 
-    // Set initial value
+    // Set the initial selected value.
     if (widget.initialValue != null) {
       _selectedItem = widget.initialValue!;
     } else if (widget.isFirstDefaultIfInitialValueNotProvided && _states.isNotEmpty) {
       _selectedItem = _states.first;
     }
   }
-
   @override
   Widget build(BuildContext context) {
     final items = _states
@@ -143,20 +163,26 @@ class _StatePickerDropdownState<T> extends State<StatePickerDropdown<T>> {
     ))
         .toList();
 
-    return DropdownButton<T>(
+    return DropdownButton2<T>(
       hint: widget.hint,
       disabledHint: widget.disabledHint,
-      onTap: widget.onTap,
-      icon: widget.icon,
-      iconSize: widget.iconSize,
-      iconDisabledColor: widget.iconDisabledColor,
-      iconEnabledColor: widget.iconEnabledColor,
-      dropdownColor: widget.dropdownColor,
+      buttonStyleData: ButtonStyleData(
+        height: widget.mainHeight,
+      ),
+      menuItemStyleData: MenuItemStyleData(
+        height: widget.itemHeight ?? 40,
+      ),
+      // onTap: widget.onTap,
+      // icon: widget.icon,
+      // iconSize: widget.iconSize,
+      // iconDisabledColor: widget.iconDisabledColor,
+      // iconEnabledColor: widget.iconEnabledColor,
+      // dropdownColor: widget.dropdownColor,
       underline: widget.underline ?? const SizedBox(),
       isDense: widget.isDense,
       isExpanded: widget.isExpanded,
       value: _selectedItem,
-      itemHeight: widget.itemHeight,
+      // itemHeight: widget.itemHeight,
       items: items,
       onChanged: (value) {
         if (value != null) {

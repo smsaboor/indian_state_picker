@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:indian_state_picker/indian_state_picker.dart';
 
 class StateDropDown extends StatefulWidget {
-  StatePickerHelper<IndianState> helper;
+  StatePickerUtils<IndianState> helper;
   StateDropDown({super.key, required this.helper});
-
   @override
   State<StateDropDown> createState() => _StateDropDownState();
 }
 
 class _StateDropDownState extends State<StateDropDown> {
+  double imageHeight = 120;
+  double imageWidth = 90;
+  double mainHeight = 100;
+  double itemHeight = 90;
+
   @override
   Widget build(BuildContext context) {
     return  ListView(
@@ -22,6 +26,9 @@ class _StateDropDownState extends State<StateDropDown> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.9,
                   child: StatePickerDropdown<IndianState>(
+                    isExpanded: true,
+                    mainHeight:mainHeight,
+                    itemHeight: itemHeight,
                     states: indianStateList,
                     onValuePicked: (state) {
                       print('Picked: ${state.name}');
@@ -29,22 +36,26 @@ class _StateDropDownState extends State<StateDropDown> {
                     itemBuilder: (state) {
                       return SizedBox(
                         width: MediaQuery.of(context).size.width * 0.8,
+                        height: mainHeight,
                         child: Padding(
-                          padding: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8.0),
                           child: Row(
                             children: [
                               widget.helper.getImage(
-                                  imagePath: state.image,
-                                  height: 80,
-                                  width: 60,
-                                  fit: BoxFit.fill), // State flag
+                                context: context,
+                                imagePath: state.image,
+                                height: imageHeight,
+                                width: imageWidth,
+                                fit: BoxFit.fill,
+                              ), // State flag
                               const SizedBox(width: 8.0),
                               Expanded(
                                 child: Text(
                                   state.name,
                                   style: const TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.normal),
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.normal,
+                                  ),
                                 ),
                               ),
                             ],
@@ -66,6 +77,8 @@ class _StateDropDownState extends State<StateDropDown> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.9,
                   child: StatePickerDropdown<IndianState>(
+                    mainHeight:mainHeight,
+                    itemHeight: itemHeight,
                     states: indianStateList,
                     topStates: [
                       widget.helper.findStateByCapital('mumbai'),
@@ -77,27 +90,26 @@ class _StateDropDownState extends State<StateDropDown> {
                     },
                     itemBuilder: (state) {
                       return SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Row(
-                            children: [
-                              widget.helper.getImage(
-                                  imagePath: state.image,
-                                  height: 80,
-                                  width: 60,
-                                  fit: BoxFit.fill), // State flag
-                              const SizedBox(width: 8.0),
-                              Expanded(
-                                child: Text(
-                                  state.name,
-                                  style: const TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.normal),
-                                ),
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        height: mainHeight,
+                        child: Row(
+                          children: [
+                            widget.helper.getImage(
+                                context: context,
+                                imagePath: state.image,
+                                height: imageHeight,
+                                width: imageWidth,
+                                fit: BoxFit.fill), // State flag
+                            const SizedBox(width: 8.0),
+                            Expanded(
+                              child: Text(
+                                state.name,
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.normal),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       );
                     },
@@ -115,6 +127,8 @@ class _StateDropDownState extends State<StateDropDown> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.9,
                   child: StatePickerDropdown<IndianState>(
+                    mainHeight: mainHeight,
+                    itemHeight: itemHeight,
                     states: indianStateList,
                     initialValue:  widget.helper.findStateByCapital('lucknow'),
                     onValuePicked: (state) {
@@ -122,15 +136,17 @@ class _StateDropDownState extends State<StateDropDown> {
                     },
                     itemBuilder: (state) {
                       return SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.8,
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        height: mainHeight,
                         child: Padding(
                           padding: const EdgeInsets.all(8),
                           child: Row(
                             children: [
                               widget.helper.getImage(
+                                  context: context,
                                   imagePath: state.image,
-                                  height: 80,
-                                  width: 60,
+                                  height: imageHeight,
+                                  width: imageWidth,
                                   fit: BoxFit.fill), // State flag
                               const SizedBox(width: 8.0),
                               Expanded(
@@ -146,8 +162,7 @@ class _StateDropDownState extends State<StateDropDown> {
                         ),
                       );
                     },
-                    sortComparator: (a, b) =>
-                        a.name.compareTo(b.name), // Sort by name
+                    sortComparator: (a, b) => a.name.compareTo(b.name), // Sort by name
                   ),
                 ),
               ],

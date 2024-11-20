@@ -4,7 +4,7 @@ import 'package:indian_state_picker/indian_state_picker.dart';
 
 
 class StateDialog extends StatefulWidget {
-  StatePickerHelper<IndianState> helper;
+  StatePickerUtils<IndianState> helper;
   StateDialog({super.key, required this.helper});
 
   @override
@@ -12,6 +12,13 @@ class StateDialog extends StatefulWidget {
 }
 
 class _StateDialogState extends State<StateDialog> {
+
+  double imageHeight = 120;
+  double imageWidth = 90;
+  double mainHeight = 100;
+  double itemHeight = 90;
+
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -33,9 +40,10 @@ class _StateDialogState extends State<StateDialog> {
                 title: Row(
                   children: <Widget>[
                     widget.helper.getImage(
+                      context: context,
                         imagePath: widget.helper.findStateByCode('mp').image,
-                        height: 80,
-                        width: 60,
+                        height: imageHeight,
+                        width: imageWidth,
                         fit: BoxFit.fill),
                     // const SizedBox(width: 8.0),
                     // Text("+${indianState.population}"),
@@ -64,9 +72,10 @@ class _StateDialogState extends State<StateDialog> {
                 title: Row(
                   children: <Widget>[
                     widget.helper.getImage(
+                        context: context,
                         imagePath: widget.helper.findStateByCode('mp').image,
-                        height: 80,
-                        width: 60,
+                        height: imageHeight,
+                        width: imageWidth,
                         fit: BoxFit.fill),
                     // const SizedBox(width: 8.0),
                     // Text("+${indianState.population}"),
@@ -95,9 +104,10 @@ class _StateDialogState extends State<StateDialog> {
                 title: Row(
                   children: <Widget>[
                     widget.helper.getImage(
+                        context: context,
                         imagePath: widget.helper.findStateByCode('mp').image,
-                        height: 80,
-                        width: 60,
+                        height: imageHeight,
+                        width: imageWidth,
                         fit: BoxFit.fill),
                     // const SizedBox(width: 8.0),
                     // Text("+${indianState.population}"),
@@ -130,9 +140,10 @@ class _StateDialogState extends State<StateDialog> {
                 title: Row(
                   children: <Widget>[
                     widget.helper.getImage(
+                        context: context,
                         imagePath: widget.helper.findStateByCode('mp').image,
-                        height: 80,
-                        width: 60,
+                        height: imageHeight,
+                        width: imageWidth,
                         fit: BoxFit.fill),
                     // const SizedBox(width: 8.0),
                     // Text("+${indianState.population}"),
@@ -181,6 +192,7 @@ class _StateDialogState extends State<StateDialog> {
             itemBuilder: (IndianState state) => Row(
               children: <Widget>[
                 widget.helper.getImage(
+                    context: context,
                     imagePath: state.image,
                     height: 80,
                     width: 60,
