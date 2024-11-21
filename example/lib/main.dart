@@ -29,7 +29,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
-  StatePickerUtils<IndianState> statePickerUtils = StatePickerUtils<IndianState>(
+  StatePickerUtils<IndianState> statePickerUtils =
+      StatePickerUtils<IndianState>(
     states: indianStateList,
     getCode: (state) => state.code,
     getName: (state) => state.name,
@@ -56,13 +57,13 @@ class _HomePageState extends State<HomePage>
             tabs: const [
               Tab(text: 'Dropdown'),
               Tab(text: 'Dialog'),
-              Tab(text: 'Custom Dropdown'),
+              Tab(text: 'Custom'),
             ],
           ),
         ),
         body: TabBarView(controller: _tabController, children: [
-          StateDropDown(helper: statePickerUtils),
-          StateDialog(helper: statePickerUtils),
+          StateDropDown(statePickerUtils: statePickerUtils),
+          StateDialog(statePickerUtils: statePickerUtils),
           const CustomStatePicker()
         ]));
   }

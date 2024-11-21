@@ -1,26 +1,30 @@
 # indian_state_picker
 
-indian_state_picker is a versatile Flutter package that provides a digital ruler (Horizontal and Vertical) capable of measuring a wide range of units, including length (kilometers, meters, feet, inches) and weight (kilograms, pounds, tons). This tool is ideal for applications in construction, fitness, education, and other fields requiring accurate, interactive measurement displays. It offers seamless customization options, allowing developers to set unit types, scale divisions, and visual styles, making it easy to integrate precise and user-friendly measurement tools into your app.
-([pub.dev](https://pub.dev/packages/indian_state_picker)).
+indian_state_picker is a Flutter package that provides an intuitive and customizable state picker
+for Indian states. It includes a predefined list of Indian states, but developers can also customize
+the list to meet specific requirements. ([pub.dev](https://pub.dev/packages/indian_state_picker)).
+
 ## Screenshots
 
 ![Vertical Ruler](./v_ruler.gif) ![Horizontal Ruler](./h_ruler.gif)
 
 ## How to Use
 
-This example demonstrates how to create a customizable vertical ruler using the flutter_unit_ruler package. You can use this ruler to display measurements in units like inches, centimeters, or any custom unit you define.
+This example demonstrates how to create a customizable state picker using the indian_state_picker
+package. The picker allows users to search, select, and view detailed information about Indian
+states, including name, capital, population, and cities.
 
 To use this package :
 
-- add the dependency to your [pubspec.yaml](https://github.com/smsaboor/indian_state_picker/blob/main/pubspec.yaml) file.
+- add the dependency to
+  your [pubspec.yaml](https://github.com/smsaboor/indian_state_picker/blob/main/pubspec.yaml) file.
 
  ```yaml
  dependencies:
-    flutter:
-      sdk: flutter
-    indian_state_picker:
+   flutter:
+     sdk: flutter
+   indian_state_picker:
 ```
-
 
 - Import the necessary packages:
 
@@ -30,115 +34,149 @@ import 'package:indian_state_picker/indian_state_picker.dart';
 ```
 
 - Code Example:
-  Below is the full code to create a ruler with centimeter units that dynamically updates as you scroll.
+  Here is a basic implementation to display a list of Indian states and allow the user to select a
+  state:
 
 ```dart
-class RulerExample extends StatefulWidget {
-  const RulerExample({super.key});
+import 'package:flutter/material.dart';
+import 'package:indian_state_picker/indian_state_picker.dart';
 
+void main() => runApp(StatePickerApp());
+
+class StatePickerApp extends StatelessWidget {
   @override
-  State<RulerExample> createState() => _RulerExampleState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: StatePickerExample(),
+    );
+  }
 }
 
-class _RulerExampleState extends State<RulerExample> {
-  final darkThemeColor = const Color(0xFF0b1f28); // Background color for the ruler
-  late final ScaleController _scaleController; // Controller to manage the current value
-
-  double currentHeight = 180.0; // Initial height value
-
-  @override
-  void initState() {
-    _scaleController = ScaleController(value: currentHeight); // Initialize the controller
-    super.initState();
-  }
-
+class StatePickerExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: darkThemeColor,
-      appBar: AppBar(
-        title: const Text('Unit Ruler Demo'),
-      ),
+      appBar: AppBar(title: Text("Indian State Picker")),
       body: Center(
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 100.0),
-              child: UnitRuler(
-                height: 300, // Height of the ruler
-                width: MediaQuery.of(context).size.width, // Width of the ruler
-                controller: _scaleController, // Use scale controller for dynamic updates
-                scrollDirection: Axis.vertical, // Set ruler orientation to vertical
-                backgroundColor: darkThemeColor, // Background color
-                scaleUnit: UnitType.length.centimeter, // Set unit to centimeters
-                scaleAlignment: Alignment.topRight, // Align scale to the top-right
-                scalePadding: const EdgeInsets.only(left: 0, right: 40, top: 10), // Padding for the scale
-                scaleMargin: 120, // Margin for scale placement
-                scaleMarker: Container(
-                  height: 2,
-                  width: 240,
-                  color: const Color(0xFF3EB48C), // Color of scale marker
-                ),
-                scaleMarkerPositionTop: 10, // Top position of the scale marker
-                scaleMarkerPositionLeft: 20, // Left position of the scale marker
-                scaleIntervalText: (index, value) => value.toInt().toString(), // Format interval text
-                scaleIntervalTextStyle: const TextStyle(
-                  color: Color(0xFFBCC2CB),
-                  fontSize: 14,
-                ),
-                scaleIntervalTextPosition: 80, // Text position on the scale
-                scaleIntervalStyles: const [
-                  ScaleIntervalStyle(color: Colors.yellow, width: 35, height: 2, scale: -1),
-                  ScaleIntervalStyle(color: Colors.blue, width: 50, height: 2.5, scale: 0),
-                  ScaleIntervalStyle(color: Colors.redAccent, width: 40, height: 2, scale: 5),
-                ],
-                onValueChanged: (value) => setState(() => currentHeight = value.toDouble()), // Update height value
-              ),
-            ),
-            Positioned(
-              bottom: 220,
-              left: 110,
-              child: Text(
-                "${currentHeight.toInt()} ${UnitType.length.centimeter.symbol}",  // Display current height in centimeters
-                style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
+        child: ElevatedButton(
+          onPressed: () async {
+            // Example of using the state picker dialog
+            final selectedState = await showDialog<IndianState>(
+              context: context,
+              builder: (context) {
+                return StatePickerDialog(
+                  states: indianStateList, // Predefined list of Indian states
+                  title: Text('Select a State'),
+                  isSearchable: true,
+                );
+              },
+            );
+            if (selectedState != null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Selected: ${selectedState.name}')),
+              );
+            }
+          },
+          child: Text("Pick a State"),
         ),
       ),
     );
   }
 }
+
+
 ```
 
 ## Key Features
-- Customizable Unit: You can specify a unit, such as UnitType.length.centimeter here, or define your own unit if needed.
-    - For custom units, use the scaleUnit parameter to define properties:
-  ```code
-  scaleUnit:  ScaleUnit(
-  name: 'inch',
-  symbol: 'in',
-  subDivisionCount: 12,
-  scaleIntervals: List.generate(
-  10, (i) => ScaleIntervals(begin: i * 12, end: (i + 1) * 12, scale: 1)),
-  ),
-  ```
-- Dynamic Value Updates: With ScaleController, you can monitor and dynamically update the ruler value in real-time. This feature is ideal for applications requiring precise tracking, such as fitness or construction apps, where the current measurement needs to be frequently adjusted and displayed.
-- Flexible Styling Options:
-    - Customize the ruler's appearance with extensive styling options:
-    - Background Color: Adjust the ruler background color to match your app theme.
-    - Alignment & Padding: Control alignment, padding, and margins to position the ruler exactly where it’s needed within the app.
-    - Scale Marker Styles: Modify the appearance of scale markers with customizable width, height, color, and placement.
-    - Interval Text Styles: Customize the font size, color, and positioning of interval labels, ensuring readability and consistency with your app's design.
 
+- Predefined and Customizable State Data
+    - Predefined list of Indian states with details such as:
+        - Name
+        - Capital
+        - Population
+        - Cities count
+
+- Search Functionality
+    - Filter states by name, capital, or code for easy selection.
+- Interactive State Display
+    - Visual display of state details with optional images and customizable text styles.
+- Customizable Dialogs
+    - Configurable dialogs with or without search functionality.
+    - Supports both searchable and non-searchable state pickers.
+
+- For custom state, use the StatePickerDropdown<T> generic class to define custom class:
+  ```code
+class StatePickerExample extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Indian State Picker")),
+      body: StatePickerDropdown<CustomState>(
+        mainHeight: 100,
+        itemHeight: 90,
+        states: [
+          CustomState(
+              image:
+                  'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/IN-AN.svg/300px-IN-AN.svg.png',
+              population: '400,000',
+              capital: 'Port Blair',
+              name: "Andaman and Nicobar Islands"),
+          CustomState(
+              image:
+                  'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/IN-AP.svg/300px-IN-AP.svg.png',
+              population: '52,000,000',
+              capital: 'Amaravati',
+              name: "Andhra Pradesh"),
+        ],
+        onValuePicked: (state) {
+          print('Picked: ${state.name}');
+        },
+        itemBuilder: (state) {
+          return SizedBox(
+            width: MediaQuery.of(context).size.width * .75,
+            child: Row(
+              children: [
+                Image.network(state.image,
+                    height: 100, width: 70, fit: BoxFit.fill),
+                const SizedBox(width: 18.0),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      state.name,
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      state.capital,
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal),
+                    ),
+                    Text(
+                      state.population,
+                      style: const TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.normal),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+        sortComparator: (a, b) => a.name.compareTo(b.name), // Sort by name
+      ),
+    );
+  }
+}
+  ```
 
 ## Usage
-Use this example to implement a scrollable vertical or horizontal ruler in your app. Modify parameters like scrollDirection and scaleUnit for additional configurations, and feel free to style the ruler's scale markers and interval text to match your app's theme.
-
+Use this package to implement a user-friendly state picker in your Flutter app. The package is highly versatile, allowing developers to customize the UI and integrate state information into applications like registration forms, travel apps, and location-based services.
 
 ## Pull Requests
 

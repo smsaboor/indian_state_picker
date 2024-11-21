@@ -18,6 +18,9 @@ class IndianState {
   /// List of cities within the state.
   final List<City> cities;
 
+  /// List of area in sq km of state.
+  final String area;
+
   /// Constructs an [IndianState] object.
   ///
   /// All fields are required and must be provided during object creation.
@@ -28,6 +31,7 @@ class IndianState {
     required this.population,
     required this.image,
     required this.cities,
+    required this.area,
   });
 
   /// Factory method to create an [IndianState] object from a [Map].
@@ -41,6 +45,7 @@ class IndianState {
       image: map['image'] as String,
       capital: map['capital'] as String,
       population: map['population'] as String,
+      area: map['area'] as String,
       cities: (map['cities'] as List)
           .map((cityMap) => City.fromMap(cityMap as Map<String, String>))
           .toList(),
@@ -56,6 +61,7 @@ class IndianState {
       'code': code,
       'capital': capital,
       'population': population,
+      'area': area,
       'image': image,
       'cities': cities.map((city) => city.toMap()).toList(),
     };
@@ -73,6 +79,8 @@ class City {
   /// Area of the city as a string.
   final String area;
 
+  List<String> tehsils;
+
   /// Constructs a [City] object.
   ///
   /// All fields are required and must be provided during object creation.
@@ -80,6 +88,7 @@ class City {
     required this.name,
     required this.population,
     required this.area,
+    required this.tehsils,
   });
 
   /// Factory method to create a [City] object from a [Map].
@@ -90,6 +99,7 @@ class City {
       name: map['name']!,
       population: map['population']!,
       area: map['area']!,
+      tehsils: map['tehsils']! as List<String>,
     );
   }
 
@@ -99,6 +109,7 @@ class City {
       'name': name,
       'population': population,
       'area': area,
+      'tehsils': tehsils.toString(),
     };
   }
 }

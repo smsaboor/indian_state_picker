@@ -103,30 +103,30 @@ class StatePickerUtils<T> {
               maxScale: 4.0,
               child: imagePath.startsWith('http')
                   ? Image.network(
-                imagePath,
-                fit: BoxFit.contain,
-              )
+                      imagePath,
+                      fit: BoxFit.contain,
+                    )
                   : Image.asset(
-                imagePath,
-                fit: BoxFit.contain,
-              ),
+                      imagePath,
+                      fit: BoxFit.contain,
+                    ),
             ),
           ),
         );
       },
       child: imagePath.startsWith('http')
           ? Image.network(
-        imagePath,
-        height: height,
-        width: width,
-        fit: fit,
-      )
+              imagePath,
+              height: height,
+              width: width,
+              fit: fit,
+            )
           : Image.asset(
-        imagePath,
-        height: height,
-        width: width,
-        fit: fit,
-      ),
+              imagePath,
+              height: height,
+              width: width,
+              fit: fit,
+            ),
     );
   }
 }

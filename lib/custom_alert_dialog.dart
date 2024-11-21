@@ -112,9 +112,11 @@ class CustomAlertDialog extends StatelessWidget {
     return Dialog(
       child: Column(
         mainAxisSize: MainAxisSize.min, // Makes the dialog wrap its content.
-        crossAxisAlignment: CrossAxisAlignment.stretch, // Stretches children horizontally.
+        crossAxisAlignment:
+            CrossAxisAlignment.stretch, // Stretches children horizontally.
         children: children,
       ),
     );
   }
 }
+

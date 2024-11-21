@@ -139,38 +139,38 @@ class StatePickerDialogState<T> extends State<StatePickerDialog<T>> {
   Widget _buildContent(BuildContext context) {
     return _filteredItems.isNotEmpty
         ? ListView(
-      shrinkWrap: true,
-      children: _filteredItems
-          .map(
-            (item) => SimpleDialogOption(
-          child: widget.itemBuilder != null
-              ? widget.itemBuilder!(item)
-              : Text(item.toString()),
-          onPressed: () {
-            widget.onValuePicked(item);
-            if (widget.popOnPick) {
-              Navigator.pop(context);
-            }
-          },
-        ),
-      )
-          .toList(),
-    )
+            shrinkWrap: true,
+            children: _filteredItems
+                .map(
+                  (item) => SimpleDialogOption(
+                    child: widget.itemBuilder != null
+                        ? widget.itemBuilder!(item)
+                        : Text(item.toString()),
+                    onPressed: () {
+                      widget.onValuePicked(item);
+                      if (widget.popOnPick) {
+                        Navigator.pop(context);
+                      }
+                    },
+                  ),
+                )
+                .toList(),
+          )
         : widget.searchEmptyView ??
-        const Center(
-          child: Text('No items found.'),
-        );
+            const Center(
+              child: Text('No items found.'),
+            );
   }
 
   /// Builds the header of the dialog, which may include a title and search field.
   Widget _buildHeader() {
     return widget.isSearchable
         ? Column(
-      children: <Widget>[
-        _buildTitle(),
-        _buildSearchField(),
-      ],
-    )
+            children: <Widget>[
+              _buildTitle(),
+              _buildSearchField(),
+            ],
+          )
         : _buildTitle();
   }
 
@@ -178,9 +178,9 @@ class StatePickerDialogState<T> extends State<StatePickerDialog<T>> {
   Widget _buildTitle() {
     return widget.titlePadding != null
         ? Padding(
-      padding: widget.titlePadding!,
-      child: widget.title,
-    )
+            padding: widget.titlePadding!,
+            child: widget.title,
+          )
         : widget.title ?? const SizedBox.shrink();
   }
 

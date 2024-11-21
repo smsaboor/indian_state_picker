@@ -20,7 +20,7 @@ class StatePickerDropdown<T> extends StatefulWidget {
     this.mainHeight,
     this.isEqual,
     this.itemBuilder,
-    this.initialValue,
+    this.selectedState,
     this.isExpanded = false,
     this.itemHeight = kMinInteractiveDimension,
     this.selectedItemBuilder,
@@ -62,7 +62,7 @@ class StatePickerDropdown<T> extends StatefulWidget {
 
   /// The initial value selected in the dropdown.
   /// If no initial value is provided, the first item in the list is selected by default.
-  final T? initialValue;
+  final T? selectedState;
 
   /// A callback triggered whenever an item is selected from the dropdown.
   /// The selected item is passed to the callback function.
@@ -76,7 +76,6 @@ class StatePickerDropdown<T> extends StatefulWidget {
 
   /// The height of each dropdown item. Defaults to [kMinInteractiveDimension].
   final double? mainHeight;
-
 
   /// Indicates whether the dropdown should use a compact layout.
   final bool isDense;
@@ -121,7 +120,7 @@ class StatePickerDropdown<T> extends StatefulWidget {
 
 class _StatePickerDropdownState<T> extends State<StatePickerDropdown<T>> {
   late List<T> _states;
-  late T _selectedItem;
+  late T? _selectedItem;
 
   @override
   void initState() {
@@ -146,21 +145,23 @@ class _StatePickerDropdownState<T> extends State<StatePickerDropdown<T>> {
     }
 
     // Set the initial selected value.
-    if (widget.initialValue != null) {
-      _selectedItem = widget.initialValue!;
-    } else if (widget.isFirstDefaultIfInitialValueNotProvided && _states.isNotEmpty) {
+    if (widget.selectedState != null) {
+      _selectedItem = widget.selectedState;
+    } else if (widget.isFirstDefaultIfInitialValueNotProvided &&
+        _states.isNotEmpty) {
       _selectedItem = _states.first;
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final items = _states
         .map((item) => DropdownMenuItem<T>(
-      value: item,
-      child: widget.itemBuilder != null
-          ? widget.itemBuilder!(item)
-          : Text(item.toString()),
-    ))
+              value: item,
+              child: widget.itemBuilder != null
+                  ? widget.itemBuilder!(item)
+                  : Text(item.toString()),
+            ))
         .toList();
 
     return DropdownButton2<T>(
@@ -170,7 +171,7 @@ class _StatePickerDropdownState<T> extends State<StatePickerDropdown<T>> {
         height: widget.mainHeight,
       ),
       menuItemStyleData: MenuItemStyleData(
-        height: widget.itemHeight ?? 40,
+        height: widget.itemHeight ?? 10,
       ),
       // onTap: widget.onTap,
       // icon: widget.icon,
@@ -193,7 +194,8 @@ class _StatePickerDropdownState<T> extends State<StatePickerDropdown<T>> {
         }
       },
       selectedItemBuilder: widget.selectedItemBuilder != null
-          ? (context) => _states.map((item) => widget.selectedItemBuilder!(item)).toList()
+          ? (context) =>
+              _states.map((item) => widget.selectedItemBuilder!(item)).toList()
           : null,
     );
   }
