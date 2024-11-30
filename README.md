@@ -8,7 +8,7 @@ the list to meet specific requirements. ([pub.dev](https://pub.dev/packages/indi
 
 ![Vertical Ruler](./v_ruler.gif) ![Horizontal Ruler](./h_ruler.gif)
 
-## How to use Indian States Picker with dialog widget or dropdown widgets. 
+## How to use Indian States Picker with dialog widget or dropdown widget. 
 
 This example demonstrates how to implement Indian State Picker dropdown and dialog using the indian_state_picker
 package. The picker allows users to search, select, and view detailed information about Indian
@@ -33,7 +33,7 @@ import 'package:flutter/material.dart';
 import 'package:indian_state_picker/indian_state_picker.dart';
 ```
 
-- Code Example to select indian states with default code:
+- Example to select indian states with default values:
   Here is a basic implementation to display a list of default Indian states and allow the user to select a
   state:
 
@@ -256,7 +256,7 @@ class _DefaultIndiaStateState extends State<DefaultIndiaState> {
 
 ```
 
-- Code Example to select indian states with custom code:
+- Example to select indian states with custom values:
   Here is a basic implementation to select developer defined or custom indian states with dialogbox and dropdowns:
 
 ```dart
@@ -704,11 +704,14 @@ class ZoomableImageWidget extends StatelessWidget {
 ## Key Features
 
 - Predefined and Customizable State Data
-    - Predefined list of Indian states with details such as:
-        - Name
-        - Capital
-        - Population
-        - Cities count
+   - Predefined list of Indian states with details such as:
+       - Name
+       - Code
+       - Capital
+       - Population
+       - Image
+       - Cities cities
+       - Area
 
 - Search Functionality
     - Filter states by name, capital, or code for easy selection.
@@ -721,6 +724,8 @@ class ZoomableImageWidget extends StatelessWidget {
 - For custom state, use the StatePickerDropdown<T> generic class to define custom class:
   ```code
 class StatePickerExample extends StatelessWidget {
+  const StatePickerExample({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -731,13 +736,13 @@ class StatePickerExample extends StatelessWidget {
         states: [
           CustomState(
               image:
-                  'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/IN-AN.svg/300px-IN-AN.svg.png',
+              'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/IN-AN.svg/300px-IN-AN.svg.png',
               population: '400,000',
               capital: 'Port Blair',
               name: "Andaman and Nicobar Islands"),
           CustomState(
               image:
-                  'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/IN-AP.svg/300px-IN-AP.svg.png',
+              'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/IN-AP.svg/300px-IN-AP.svg.png',
               population: '52,000,000',
               capital: 'Amaravati',
               name: "Andhra Pradesh"),
@@ -747,7 +752,10 @@ class StatePickerExample extends StatelessWidget {
         },
         itemBuilder: (state) {
           return SizedBox(
-            width: MediaQuery.of(context).size.width * .75,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width * .75,
             child: Row(
               children: [
                 Image.network(state.image,
