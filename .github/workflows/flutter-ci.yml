@@ -1,0 +1,39 @@
+name: Flutter CI
+
+# This defines the trigger for the workflow (on push to main or pull requests to main)
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # You can also use macos-latest or windows-latest based on your requirements
+
+    steps:
+      # Step 1: Checkout the repository code
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Flutter SDK
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'  # You can specify a specific Flutter version
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Step 4: Run tests
+      - name: Run tests
+        run: flutter test
+
+      # Step 5: Build APK for Android (you can customize this for other platforms)
+      - name: Build APK (Android)
+        run: flutter build apk --release
+
+      # Optionally, add more steps for iOS, web, or other platforms
