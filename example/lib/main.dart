@@ -4,8 +4,8 @@ import 'package:indian_state_picker/indian_state_picker.dart';
 // Dimensions for images and items.
 double imageHeight = 120;
 double imageWidth = 90;
-double mainHeight = 100;
-double itemHeight = 90;
+double mainHeight = 125;
+double itemHeight = 125;
 
 void main() => runApp(const MyApp());
 
@@ -598,7 +598,7 @@ class _DemoStatePickerDialogState extends State<DemoStatePickerDialog> {
             searchCursorColor: Colors.pinkAccent,
             searchInputDecoration: const InputDecoration(hintText: 'Search...'),
             isSearchable: isSearchable,
-            title: const Text('Select your phone code'),
+            title: const Text('Select your state'),
             searchFilter: (item, query) {
               if (searchOn == "name") {
                 return item.name.toLowerCase().contains(query.toLowerCase());

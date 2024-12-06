@@ -6,7 +6,7 @@ the list to meet specific requirements. ([pub.dev](https://pub.dev/packages/indi
 
 ## Screenshots
 
-![Vertical Ruler](./v_ruler.gif) ![Horizontal Ruler](./h_ruler.gif)
+![Dropdowns](./dropdown.gif) ![Dialogs](./dialog.gif) ![Custom State Picker](./custom.gif)
 
 ## How to use Indian States Picker with dialog widget or dropdown widget. 
 

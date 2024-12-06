@@ -1,6 +1,6 @@
 name: indian_state_picker
 description: "A Flutter package for selecting Indian states with customizable options and predefined data, allowing seamless integration into your app with enhanced user experience."
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/smsaboor/indian_state_picker
 repository: https://github.com/smsaboor/indian_state_picker
 
